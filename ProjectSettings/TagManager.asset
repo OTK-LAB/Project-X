@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Obstacle
+  - Sticks
+  - Faster
+  - Slower
   layers:
   - Default
   - TransparentFX
