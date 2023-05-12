@@ -8,6 +8,8 @@ TagManager:
   - Sticks
   - Faster
   - Slower
+  - Path
+  - EndingLine
   layers:
   - Default
   - TransparentFX
@@ -15,9 +17,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - SpeedChangers
+  - Collider
+  - EndingLine
   - 
   - 
   - 

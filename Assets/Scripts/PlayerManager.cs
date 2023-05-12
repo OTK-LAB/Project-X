@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
     private Transform player;
-    private Vector3 startMousePos, startBallPos;
+    private Vector3 startMousePos, startBallPos, startTouchPos, endTouchPos;
     private bool moveTheBall;
     [Range(0f,1f)]public float maxSpeed;
     [Range(0f,1f)]public float canSpeed;
@@ -13,15 +14,51 @@ public class PlayerManager : MonoBehaviour
     private float velocity, canVelocity;
     private Camera mainCam;
     public Transform path;
+    private Rigidbody rb;
+    private Collider _collider;
+    public Slider _slider;
+    private float sliderMin;
+    private float sliderMax;
+    private float sliderSpeed;
+
+
     void Start()
     {
         player = transform;
         mainCam = Camera.main;
+        rb = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
     }
 
     
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //rb.isKinematic = _collider.isTrigger = false;
+            rb.velocity = new Vector3(0f,7f,0f);
+            Debug.Log("JUMPED");
+        }
+
+        if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            startTouchPos = Input.GetTouch(0).position;
+        }
+
+        if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
+        {
+            endTouchPos = Input.GetTouch(0).position;
+        }
+
+        if(endTouchPos.y > startTouchPos.y && rb.velocity.y == 0)
+        {
+            rb.isKinematic = _collider.isTrigger = false;
+            rb.velocity = new Vector3(0f,7f,0f);
+            startTouchPos = Vector3.zero;
+            endTouchPos = Vector3.zero;
+            Debug.Log("JUMPED");
+        }
+        
         if(Input.GetMouseButtonDown(0) && MenuManager.MenuManagerInstance.GameState)
         {
             moveTheBall = true;
@@ -89,6 +126,21 @@ public class PlayerManager : MonoBehaviour
         {
             pathSpeed -= 2;
         }
+        if(other.CompareTag("EndingLine"))
+        {
+            pathSpeed = 0;
+        }
     }
     
+    private void OnCollisionEnter(Collision other)
+    {
+        if(other.collider.CompareTag("Path"))
+        {
+            //rb.isKinematic = _collider.isTrigger = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+      
+    }
 }
